@@ -1,0 +1,13 @@
+li a {
+    color: white;
+    font-size:30px;
+}
+h1{
+    text-align:center;
+    color:white;
+}
+body{
+    background-image:url('images/img.jpg');
+    background-repeat:no-repeat;
+    background-size:cover;
+}

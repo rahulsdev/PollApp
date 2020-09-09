@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-light bg-danger">
+    <a href="#" class="navbar-brand">Pollapp</a>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ml-auto navbar-right">
+            {% if user.is_authenticated %}
+            <img src={{ user.profilepicmodel.image.url }} class="rounded-circle" width="60px" height="50px" >
+            {% else %}
+
+            {% endif %}
+            <a href="{% url 'polls:logout' %}" class="nav-link btn btn-primary">Logout</a>
+        </div>
+    </div>
+</nav>
+
+{% block content %}
+{% endblock %}

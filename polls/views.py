@@ -2,12 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse,HttpResponseRedirect
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import generic
 from .forms import SignUpForm,LoginForm,Profile
 from .models import Question,Choice,User,ProfilePicModel
 from django.contrib.auth import authenticate,login as auth_login ,logout as auth_logout
-
+from bs4 import BeautifulSoup
+import requests
 
 
 def signup(request):
@@ -27,6 +29,21 @@ def signup(request):
     context = {'form': user_form, 'picture_form': profile_form}
     return render(request,'polls/signup.html',context)
 
+
+
+
+
+def scrap(request):
+    link = request.POST['url']
+    source = requests.get(link).text
+    soup = BeautifulSoup(source,'lxml')
+    code = soup.prettify()
+
+    return render(request,'polls/scrap_code.html',{'soup':code})
+
+def scrap_flipkart(request):
+    source = requests.get('https://www.flipkart.com/').text
+    soup = BeautifulSoup(source,'lxml')
 
 
 

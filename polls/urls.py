@@ -34,6 +34,8 @@ urlpatterns = [
     path('show',views.adminView.as_view(),name = 'show'),
     path('update/<int:id>',views.update,name = 'update'),
     path('delete/<int:id>', views.delete, name='delete'),
+    path('scrap',views.scrap,name = 'scrap'),
+    path('scrap_flipkart',views.scrap_flipkart,name = 'scrap_flipkart'),
 
 
 

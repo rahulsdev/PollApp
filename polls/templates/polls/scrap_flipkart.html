@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flipkart</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+    {% for head in head %}
+        <h2>{{ head }}</h2>
+
+
+        <p>{{prod}}</p>
+        <p>{{off}}</p>
+        <p>{{brand}}</p>
+        {% endfor %}
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
@@ -41,9 +43,43 @@ def scrap(request):
 
     return render(request,'polls/scrap_code.html',{'soup':code})
 
+
+
+
 def scrap_flipkart(request):
     source = requests.get('https://www.flipkart.com/').text
     soup = BeautifulSoup(source,'lxml')
+    headings = []
+    product = []
+    offer = []
+    brand = []
+    area = soup.find_all('div',class_='_12iFZG _3PG6Wd')
+    for all in area:
+        section = all.find_all('div',class_='_1GRhLX _3JslKL')
+        for each in section:
+            heading  = each.find_all('h2', class_='puxlXr')
+            name     = each.find_all('div', class_='iUmrbN')
+            discount = each.find_all('div', class_='BXlZdc')
+            more     = each.find_all('div', class_='_3o3r66')
+            for head in heading:
+                headings.append(head.text)
+            for nam in name:
+                product.append(nam.text)
+            for off in discount:
+                offer.append(off.text)
+            for category in more:
+                brand.append(category.text)
+
+    page1 = {}
+
+    page1["head"] = headings
+    page1["prod"] = product
+    page1["off"] = offer
+    page1["brand"] = brand
+    print(page1)
+
+    return render(request,'polls/scrap_flipkart.html',page1)
+
 
 
 

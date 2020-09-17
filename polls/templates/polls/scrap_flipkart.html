@@ -9,14 +9,16 @@
 <body>
 <div class="container">
     <div class="row">
-    {% for head in head %}
-        <h2>{{ head }}</h2>
+    {% for each in product_list %}
+        <h2>{{each.heading }}</h2>
+        {% for item in each.data %}
+        <p>{{item.name}}</p>
+        <p>{{item.discount}}</p>
+        <p>{{item.more}}</p><br>
+        {% endfor%}
 
-
-        <p>{{prod}}</p>
-        <p>{{off}}</p>
-        <p>{{brand}}</p>
         {% endfor %}
+
     </div>
 
 </div>

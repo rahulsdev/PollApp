@@ -1,5 +1,5 @@
 from itertools import zip_longest
-
+import PyPDF2 as p2
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
@@ -31,8 +31,15 @@ def signup(request):
     context = {'form': user_form, 'picture_form': profile_form}
     return render(request,'polls/signup.html',context)
 
-
-
+# def pdf_view(request):
+#     file = open("media/pdf/A Sample PDF.pdf","rb")
+#     pdfread = p2.PdfFileReader(file)
+#     x = pdfread.getPage(0)
+#     textFile = open("media/txt/text.txt",'a')
+#     textFile.write(x.extractText())
+#     text ={}
+#     text["t"] = x.extractText()
+#     return render(request,'polls/pdf_view.html',text)
 
 
 def scrap(request):
@@ -45,39 +52,32 @@ def scrap(request):
 
 
 
-
 def scrap_flipkart(request):
     source = requests.get('https://www.flipkart.com/').text
     soup = BeautifulSoup(source,'lxml')
-    headings = []
-    product = []
-    offer = []
-    brand = []
-    area = soup.find_all('div',class_='_12iFZG _3PG6Wd')
+    product_list = []
+    area = soup.find_all('div',class_='_1GRhLX _3JslKL')
     for all in area:
-        section = all.find_all('div',class_='_1GRhLX _3JslKL')
+        data_list = []
+        heading = all.find('h2', class_='puxlXr').text
+        section = all.find_all('div',class_='_2kSfQ4')
+        test = {'heading':heading}
+
         for each in section:
-            heading  = each.find_all('h2', class_='puxlXr')
-            name     = each.find_all('div', class_='iUmrbN')
-            discount = each.find_all('div', class_='BXlZdc')
-            more     = each.find_all('div', class_='_3o3r66')
-            for head in heading:
-                headings.append(head.text)
-            for nam in name:
-                product.append(nam.text)
-            for off in discount:
-                offer.append(off.text)
-            for category in more:
-                brand.append(category.text)
+            product_data = {}
+            name     = each.find('div', class_='iUmrbN')
+            discount = each.find('div', class_='BXlZdc')
+            more     = each.find('div', class_='_3o3r66')
 
-    page1 = {}
+            product_data["name"] = name.text
+            product_data["discount"] = discount.text
+            product_data["more"] = more.text
 
-    page1["head"] = headings
-    page1["prod"] = product
-    page1["off"] = offer
-    page1["brand"] = brand
-    print(page1)
-
+            data_list.append(product_data)
+        test["data"] = data_list
+        product_list.append(test)
+    print(product_list)
+    page1 = {'product_list':product_list}
     return render(request,'polls/scrap_flipkart.html',page1)
 
 

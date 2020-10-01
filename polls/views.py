@@ -50,7 +50,8 @@ def scrap(request):
 
     return render(request,'polls/scrap_code.html',{'soup':code})
 
-
+def payment(request):
+    return render(request,'polls/payment_form.html')
 
 def scrap_flipkart(request):
     source = requests.get('https://www.flipkart.com/').text

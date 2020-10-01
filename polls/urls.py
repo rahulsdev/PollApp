@@ -36,6 +36,7 @@ urlpatterns = [
     path('delete/<int:id>', views.delete, name='delete'),
     path('scrap',views.scrap,name = 'scrap'),
     path('scrap_flipkart',views.scrap_flipkart,name = 'scrap_flipkart'),
+    path('payment',views.payment,name = 'payment'),
     # path('pdf',views.pdf_view,name='pdf')
 
 

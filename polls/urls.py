@@ -37,6 +37,8 @@ urlpatterns = [
     path('scrap',views.scrap,name = 'scrap'),
     path('scrap_flipkart',views.scrap_flipkart,name = 'scrap_flipkart'),
     path('payment',views.payment,name = 'payment'),
+    path('payprocess/',views.pay_process,name = 'payprocess'),
+    path('paysuccess',views.paysuccess,name = 'paysuccess'),
     # path('pdf',views.pdf_view,name='pdf')
 
 

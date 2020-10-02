@@ -1,3 +1,5 @@
+import json
+import uuid
 from itertools import zip_longest
 import PyPDF2 as p2
 from django.contrib.auth.decorators import login_required
@@ -7,6 +9,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import generic
+
+from mysite import settings
 from .forms import SignUpForm,LoginForm,Profile
 from .models import Question,Choice,User,ProfilePicModel
 from django.contrib.auth import authenticate,login as auth_login ,logout as auth_logout
@@ -53,6 +57,42 @@ def scrap(request):
 def payment(request):
     return render(request,'polls/payment_form.html')
 
+def pay_process(request):
+    response = {}
+    from square.client import Client
+    client = Client(
+        access_token=settings.SQUARE_ACCESS_TOKEN,
+        environment=settings.SQUARE_ENVIRONMENT,
+    )
+    nonce = request.GET.get('nonce',None)
+    price = 100
+    idempotency_key = uuid.uuid4().hex[:16]
+    body = {
+            "source_id" : nonce,
+            "idempotency_key": idempotency_key,
+            "amount_money": {
+                "amount": price,
+                "currency": "USD"
+            }
+        }
+
+    payment_api = client.payments
+    result = payment_api.create_payment(body)
+    if result.is_success():
+        print(result.body)
+        response["status"] = "Payment Successful"
+    elif result.is_error():
+        print(result.errors)
+        err_code = str(result.errors[0].get("category"))
+        print(err_code)
+        response["error"] = err_code
+        response["status"] = "Payment Failed"
+
+    #response["status"] = render_to_string('polls/payment_status.html')
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def paysuccess(request):
+    return render(request,'polls/pay_success.html')
 def scrap_flipkart(request):
     source = requests.get('https://www.flipkart.com/').text
     soup = BeautifulSoup(source,'lxml')

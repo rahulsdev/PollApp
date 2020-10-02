@@ -4,20 +4,22 @@
 	<title></title>
 	{% load static %}
 	<!-- link to the SqPaymentForm library -->
-	<script type="text/javascript" src="{% static 'assets/js/paymentform.js' %}">
-	</script>
-
+	<script type="text/javascript" src="{% static 'assets/js/paymentform.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="{% static 'css/bootstrap.min.css' %}"></script>
 	<!-- link to the local custom styles for SqPaymentForm -->
-	<link rel="stylesheet" type="text/css" href="{% static 'assets/css/mysqpaymentform.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/mysqpaymentform.css' %}">
 </head>
 <body>
-   <div id="form-container">
+    <div id="form-container">
      <div id="sq-card-number"></div>
      <div class="third" id="sq-expiration-date"></div>
      <div class="third" id="sq-cvv"></div>
      <div class="third" id="sq-postal-code"></div>
+     <input type="hidden" id="nonce" >
      <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay $1.00</button>
-   </div> <!-- end #form-container --> 
+   <!-- end #form-container -->
    <!-- TODO: Add script from step 1.1.3 -->
    <script type="text/javascript">
      // Create and initialize a payment form object
@@ -60,21 +62,19 @@
            * Triggered when: SqPaymentForm completes a card nonce request
            */
            cardNonceResponseReceived: function (errors, nonce, cardData) {
-           if (errors) {
-               // Log errors from nonce generation to the browser developer console.
-               console.error('Encountered errors:');
-               errors.forEach(function (error) {
-                   console.error('  ' + error.message);
-               });
-               alert('Encountered errors, check browser developer console for more details');
-               return;
-           }
-              alert(`The generated nonce is:\n${nonce}`);
+           if(nonce){
+
+
+            document.getElementById('nonce').value = nonce;
               //TODO: Replace alert with code in step 2.1
+            
+
            }
        }
+       }
      });
-         //TODO: paste code from step 1.1.5
+     paymentForm.build();
+     //TODO: paste code from step 1.1.5
      // onGetCardNonce is triggered when the "Pay $1.00" button is clicked
      function onGetCardNonce(event) {
        // Don't submit the form until SqPaymentForm returns with a nonce
@@ -83,10 +83,37 @@
        paymentForm.requestCardNonce();
      }
 	 //TODO: paste code from step 1.1.4
-	   paymentForm.build();
+	   
 
    </script>
 
+  </div>
+<script type="text/javascript">
+  $("#sq-creditcard").click(function(){
+    var nonce     = $("#nonce").val()
+    $.ajax({
+
+          url: "payprocess",
+          type: 'GET',
+          data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'nonce':nonce
+            },
+          
+          success: function (response) {
+            console.log(response.error)
+            console.log(response.status)
+            if (response.status == "Payment Failed"){
+                alert("Payment Failed: Check your inputs,ERROR CODE  "+response.error)
+            }
+            else if (response.status == "Payment Successful"){
+                alert("Success")
+            }
+          }
+
+            });
+  });
+</script>
 </body>
 </html>
 

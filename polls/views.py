@@ -64,7 +64,8 @@ def pay_process(request):
         access_token=settings.SQUARE_ACCESS_TOKEN,
         environment=settings.SQUARE_ENVIRONMENT,
     )
-    nonce = request.GET.get('nonce',None)
+    nonce = request.GET.get('nonce')
+    print(nonce)
     price = 100
     idempotency_key = uuid.uuid4().hex[:16]
     body = {

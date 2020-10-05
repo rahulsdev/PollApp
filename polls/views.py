@@ -89,7 +89,6 @@ def pay_process(request):
         response["error"] = err_code
         response["status"] = "Payment Failed"
 
-    #response["status"] = render_to_string('polls/payment_status.html')
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def paysuccess(request):

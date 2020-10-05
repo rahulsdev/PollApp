@@ -17,7 +17,7 @@
      <div class="third" id="sq-expiration-date"></div>
      <div class="third" id="sq-cvv"></div>
      <div class="third" id="sq-postal-code"></div>
-     <input type="text" id="nonce" value="">
+     <input type="hidden" id="nonce" value="">
      <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay $1.00</button>
    <!-- end #form-container -->
 
@@ -78,7 +78,7 @@
             $("#sq-creditcard").click(function(){
 
                 var nonce = $('#nonce').val()
-                console.log(nonce)
+                
                 $.ajax({
 
                       url: "payprocess",

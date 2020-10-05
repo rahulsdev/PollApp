@@ -37,6 +37,8 @@ class LoginForm(AuthenticationForm):
     class Meta:
         fields = ['username', 'password','user']
 
-
-
+class createCustomer(forms.Form):
+    given_name = forms.CharField(required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
+    company_name = forms.CharField(required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
+    phone_number = forms.CharField(required=True,widget=forms.TextInput(attrs={'class':'form-control'}))
 

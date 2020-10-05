@@ -17,15 +17,14 @@
      <div class="third" id="sq-expiration-date"></div>
      <div class="third" id="sq-cvv"></div>
      <div class="third" id="sq-postal-code"></div>
-     <input type="hidden" id="nonce" value="">
-     <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay $1.00</button>
+     <button id="" class="button-credit-card" onclick="onGetCardNonce(event)">Pay $1.00</button>
    <!-- end #form-container -->
 
         <script type="text/javascript">
 
             const paymentForm = new SqPaymentForm({
 
-                    applicationId: "sandbox-sq0idb-m0qUj9KaOKSHOjuUCEh8jw",
+                   applicationId: "sandbox-sq0idb-m0qUj9KaOKSHOjuUCEh8jw",
                    inputClass: 'sq-input',
                    autoBuild: false,
 
@@ -57,13 +56,58 @@
                    callbacks: {
 
                        cardNonceResponseReceived: function (errors, nonce, cardData) {
-                       if(nonce){
 
-                        document.getElementById('nonce').value = nonce;
+                       if(nonce){
+                            $.ajax({
+
+                                  url: "payprocess",
+                                  type: 'GET',
+                                  data: {
+                                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                                        'nonce':nonce
+                                    },
+
+                                  success: function (response) {
+                                     if (response.status == "Payment Successful"){
+                                        alert("Success")
+                                    }
+                                  }
+
+                            });
+
+                       }
+                       else if(errors){
+
+                        errors.forEach(function (error){
+                            var err_message = error.message;
+                            
+
+                            $.ajax({
+
+                                  url: "payprocess",
+                                  type: 'GET',
+                                  data: {
+                                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                                        'errors': err_message
+                                    },
+
+                                  success: function (response) {
+
+                                    if (response.status == "Payment Failed"){
+                                        alert("Payment Failed  ,ERROR CODE  "+response.error)
+                                    }
+
+                                  }
+
+                            });
+                            });
+
+
+
                        }
                    }
-            }
-        });
+                }
+            });
                  paymentForm.build();
 
                  function onGetCardNonce(event) {
@@ -72,34 +116,6 @@
 
                    paymentForm.requestCardNonce();
                  }
-
-
-
-            $("#sq-creditcard").click(function(){
-
-                var nonce = $('#nonce').val()
-                
-                $.ajax({
-
-                      url: "payprocess",
-                      type: 'GET',
-                      data: {
-                            csrfmiddlewaretoken: '{{ csrf_token }}',
-                            'nonce':nonce
-                        },
-
-                      success: function (response) {
-
-                        if (response.status == "Payment Failed"){
-                            alert("Payment Failed: Check your inputs,ERROR CODE  "+response.error)
-                        }
-                        else if (response.status == "Payment Successful"){
-                            alert("Success")
-                        }
-                      }
-
-                        });
-              });
 
    </script>
 

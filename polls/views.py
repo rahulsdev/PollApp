@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views import generic
 
 from mysite import settings
-from .forms import SignUpForm,LoginForm,Profile
+from .forms import SignUpForm,LoginForm,Profile,createCustomer
 from .models import Question,Choice,User,ProfilePicModel
 from django.contrib.auth import authenticate,login as auth_login ,logout as auth_logout
 from bs4 import BeautifulSoup
@@ -44,6 +44,28 @@ def signup(request):
 #     text ={}
 #     text["t"] = x.extractText()
 #     return render(request,'polls/pdf_view.html',text)
+def addsqcustomerpage(request):
+    form = createCustomer(request.POST)
+    return render(request, 'polls/square_create_customer.html', {'form': form})
+
+def sq_create_customer(request):
+
+    if request.method == 'POST':
+
+        name = request.POST.get('name')
+        company = request.POST.get('company')
+        phone = request.POST.get('phone')
+        idempotency_key = uuid.uuid4().hex[:16]
+        from square.client import Client
+        client = Client(
+            access_token=settings.SQUARE_ACCESS_TOKEN,
+            environment=settings.SQUARE_ENVIRONMENT,
+        )
+        api_customers = client.customers
+        request_body = {'idempotency_key': idempotency_key, 'given_name': name, 'company_name': company,'phone_number':phone}
+        result = api_customers.create_customer(request_body)
+    response = {}
+    return HttpResponse(json.loads(response),content_type="application/json")
 
 
 def scrap(request):
@@ -65,7 +87,8 @@ def pay_process(request):
         environment=settings.SQUARE_ENVIRONMENT,
     )
     nonce = request.GET.get('nonce')
-    print(nonce)
+    error_message = request.GET.get('errors')
+    print(error_message)
     price = 100
     idempotency_key = uuid.uuid4().hex[:16]
     body = {
@@ -83,10 +106,9 @@ def pay_process(request):
         print(result.body)
         response["status"] = "Payment Successful"
     elif result.is_error():
-        print(result.errors)
-        err_code = str(result.errors[0].get("category"))
-        print(err_code)
-        response["error"] = err_code
+
+
+        response["error"] = error_message
         response["status"] = "Payment Failed"
 
     return HttpResponse(json.dumps(response), content_type="application/json")

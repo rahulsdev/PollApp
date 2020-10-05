@@ -39,6 +39,8 @@ urlpatterns = [
     path('payment',views.payment,name = 'payment'),
     path('payprocess/',views.pay_process,name = 'payprocess'),
     path('paysuccess',views.paysuccess,name = 'paysuccess'),
+    path('addcustomerpage',views.addsqcustomerpage,name='addcustomerpage'),
+    path('addcustomer',views.sq_create_customer,name='addcustomer')
     # path('pdf',views.pdf_view,name='pdf')
 
 

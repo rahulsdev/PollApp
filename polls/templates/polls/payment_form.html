@@ -20,98 +20,90 @@
      <input type="text" id="nonce" value="">
      <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay $1.00</button>
    <!-- end #form-container -->
-   <!-- TODO: Add script from step 1.1.3 -->
-   <script type="text/javascript">
 
-     const paymentForm = new SqPaymentForm({
+        <script type="text/javascript">
 
-       applicationId: "sandbox-sq0idb-m0qUj9KaOKSHOjuUCEh8jw",
-       inputClass: 'sq-input',
-       autoBuild: false,
+            const paymentForm = new SqPaymentForm({
 
-       inputStyles: [{
-           fontSize: '16px',
-           lineHeight: '24px',
-           padding: '16px',
-           placeholderColor: '#a0a0a0',
-           backgroundColor: 'transparent',
-       }],
+                    applicationId: "sandbox-sq0idb-m0qUj9KaOKSHOjuUCEh8jw",
+                   inputClass: 'sq-input',
+                   autoBuild: false,
 
-       cardNumber: {
-           elementId: 'sq-card-number',
-           placeholder: 'Card Number'
-       },
-       cvv: {
-           elementId: 'sq-cvv',
-           placeholder: 'CVV'
-       },
-       expirationDate: {
-           elementId: 'sq-expiration-date',
-           placeholder: 'MM/YY'
-       },
-       postalCode: {
-           elementId: 'sq-postal-code',
-           placeholder: 'Postal'
-       },
+                   inputStyles: [{
+                       fontSize: '16px',
+                       lineHeight: '24px',
+                       padding: '16px',
+                       placeholderColor: '#a0a0a0',
+                       backgroundColor: 'transparent',
+                   }],
 
-       callbacks: {
+                   cardNumber: {
+                       elementId: 'sq-card-number',
+                       placeholder: 'Card Number'
+                   },
+                   cvv: {
+                       elementId: 'sq-cvv',
+                       placeholder: 'CVV'
+                   },
+                   expirationDate: {
+                       elementId: 'sq-expiration-date',
+                       placeholder: 'MM/YY'
+                   },
+                   postalCode: {
+                       elementId: 'sq-postal-code',
+                       placeholder: 'Postal'
+                   },
 
-           cardNonceResponseReceived: function (errors, nonce, cardData) {
-           if(nonce){
+                   callbacks: {
 
+                       cardNonceResponseReceived: function (errors, nonce, cardData) {
+                       if(nonce){
 
-            document.getElementById('nonce').value = nonce;
-            return;
-
-            
-
-           }
-       }
-       }
-     });
-     paymentForm.build();
-
-     function onGetCardNonce(event) {
-
-       event.preventDefault();
-
-       paymentForm.requestCardNonce();
-     }
-
-
-
-$("#sq-creditcard").click(function(){
-
-    var nonce = $('#nonce').val()
-    console.log(nonce)
-    $.ajax({
-
-          url: "payprocess",
-          type: 'GET',
-          data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                'nonce':nonce
-            },
-
-          success: function (response) {
-
-            if (response.status == "Payment Failed"){
-                alert("Payment Failed: Check your inputs,ERROR CODE  "+response.error)
+                        document.getElementById('nonce').value = nonce;
+                       }
+                   }
             }
-            else if (response.status == "Payment Successful"){
-                alert("Success")
-            }
-          }
+        });
+                 paymentForm.build();
 
-            });
-  });
+                 function onGetCardNonce(event) {
+
+                   event.preventDefault();
+
+                   paymentForm.requestCardNonce();
+                 }
+
+
+
+            $("#sq-creditcard").click(function(){
+
+                var nonce = $('#nonce').val()
+                console.log(nonce)
+                $.ajax({
+
+                      url: "payprocess",
+                      type: 'GET',
+                      data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            'nonce':nonce
+                        },
+
+                      success: function (response) {
+
+                        if (response.status == "Payment Failed"){
+                            alert("Payment Failed: Check your inputs,ERROR CODE  "+response.error)
+                        }
+                        else if (response.status == "Payment Successful"){
+                            alert("Success")
+                        }
+                      }
+
+                        });
+              });
 
    </script>
 
   </div>
-
-
-
 </body>
 </html>
 

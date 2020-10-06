@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+from mysite.secrets import *
 
 # Application definition
 
@@ -132,6 +133,3 @@ STATICFILES_DIRS =[
     os.path.join(BASE_DIR,'media')
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-SQUARE_ACCESS_TOKEN = "EAAAEFk-tFWWY6B3nJKbLeDREs5c5YPMx74HIEBRAitDWet-zR4oTc8EuUhL8Nj3"
-SQUARE_ENVIRONMENT = "sandbox"
-SQUARE_LOCATION_ID = "LKTJRKQKK0M96"

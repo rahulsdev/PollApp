@@ -40,7 +40,9 @@ urlpatterns = [
     path('payprocess/',views.pay_process,name = 'payprocess'),
     path('paysuccess',views.paysuccess,name = 'paysuccess'),
     path('addcustomerpage',views.addsqcustomerpage,name='addcustomerpage'),
-    path('addcustomer',views.sq_create_customer,name='addcustomer')
+    path('addcustomer',views.sq_create_customer,name='addcustomer'),
+    path('sms',views.twilio_sms,name='sms'),
+    path('mail',views.sendmail,name='mail')
     # path('pdf',views.pdf_view,name='pdf')
 
 
@@ -56,3 +58,6 @@ urlpatterns = [
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
                               document_root=settings.MEDIA_ROOT)
+
+
+#sendgrid apikey = "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"        

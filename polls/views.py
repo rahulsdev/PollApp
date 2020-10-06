@@ -9,7 +9,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import generic
-
+from twilio.rest import Client
+from django.core.mail import send_mail
 from mysite import settings
 from .forms import SignUpForm,LoginForm,Profile,createCustomer
 from .models import Question,Choice,User,ProfilePicModel
@@ -47,6 +48,23 @@ def signup(request):
 def addsqcustomerpage(request):
     form = createCustomer(request.POST)
     return render(request, 'polls/square_create_customer.html', {'form': form})
+def twilio_sms(request):
+    account_sid = 'AC03a6c4b4da03b7c4aaf796d112bf28bd'
+    auth_token = '38e4692061f77b15d815fe4a822c8626'
+    client = Client(account_sid, auth_token)
+
+    message = client.messages .create(
+        body="Join Earth's mightiest heroes. Like Kevin Bacon.",
+        from_='+19168888159',
+        to='+15558675310'
+    )
+
+    print(message.sid)
+    return HttpResponse('Success')
+def sendmail(request):
+    emailid = settings.EMAIL_HOST_USER
+    res  = send_mail('Hi','Welcome',emailid,['rahulsdev4@gmail.com'])
+    return HttpResponse(res)
 
 def sq_create_customer(request):
 

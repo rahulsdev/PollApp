@@ -49,8 +49,8 @@ def addsqcustomerpage(request):
     form = createCustomer(request.POST)
     return render(request, 'polls/square_create_customer.html', {'form': form})
 def twilio_sms(request):
-    account_sid = 'AC03a6c4b4da03b7c4aaf796d112bf28bd'
-    auth_token = '38e4692061f77b15d815fe4a822c8626'
+    account_sid = settings.TWILIO_ACCOUNT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
     client = Client(account_sid, auth_token)
 
     message = client.messages .create(

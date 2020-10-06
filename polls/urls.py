@@ -60,4 +60,4 @@ if settings.DEBUG:
                               document_root=settings.MEDIA_ROOT)
 
 
-#sendgrid apikey = "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"        
+

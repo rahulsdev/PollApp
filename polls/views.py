@@ -64,8 +64,9 @@ def sq_create_customer(request):
         api_customers = client.customers
         request_body = {'idempotency_key': idempotency_key, 'given_name': name, 'company_name': company,'phone_number':phone}
         result = api_customers.create_customer(request_body)
-    response = {}
-    return HttpResponse(json.loads(response),content_type="application/json")
+        print(result)
+    response = ""
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 def scrap(request):
